@@ -43,11 +43,18 @@ const candidateColors = {
     '趙少康': '#080899', // 藍色（中國國民黨）
 };
 
+// "photo":{"柯文哲":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/d4\/%E6%9F%AF%E6%96%87%E5%93%B2%E4%B8%BB%E5%B8%AD.jpg\/500px-%E6%9F%AF%E6%96%87%E5%93%B2%E4%B8%BB%E5%B8%AD.jpg","陳佩琪":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/6\/62\/%E9%99%B3%E4%BD%A9%E7%90%AA.jpg","苗博雅":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/1\/1a\/%E7%A4%BE%E6%9C%83%E6%B0%91%E4%B8%BB%E9%BB%A8%E5%8F%B0%E5%8C%97%E5%B8%82%E8%AD%B0%E5%93%A1%E8%8B%97%E5%8D%9A%E9%9B%85.png","彭振聲":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/b\/b9\/%E8%87%BA%E5%8C%97%E5%B8%82%E5%89%AF%E5%B8%82%E9%95%B7%E5%BD%AD%E6%8C%AF%E8%81%B2.jpg","黃國昌":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/9\/94\/%E9%BB%83%E5%9C%8B%E6%98%8C%E5%A7%94%E5%93%A1.jpg\/500px-%E9%BB%83%E5%9C%8B%E6%98%8C%E5%A7%94%E5%93%A1.jpg","黃珊珊":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/8\/8e\/%E9%BB%83%E7%8F%8A%E7%8F%8A%E8%82%96%E5%83%8F.jpg\/500px-%E9%BB%83%E7%8F%8A%E7%8F%8A%E8%82%96%E5%83%8F.jpg","鍾小平":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/d\/d0\/%E9%8D%BE%E5%B0%8F%E5%B9%B3%E8%AD%B0%E5%93%A1.jpg","蔡壁如":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/21\/%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1%E8%94%A1%E5%A3%81%E5%A6%82.jpg","王世堅":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/f\/fe\/%E7%8E%8B%E4%B8%96%E5%A0%85%E8%82%96%E5%83%8F.jpg\/500px-%E7%8E%8B%E4%B8%96%E5%A0%85%E8%82%96%E5%83%8F.jpg","應曉薇":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/3\/36\/%E6%87%89%E6%9B%89%E8%96%87%E8%AD%B0%E5%93%A1.jpg","郝龍斌":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/8\/8e\/%E9%83%9D%E9%BE%8D%E6%96%8C%E5%B8%82%E9%95%B7.jpg\/500px-%E9%83%9D%E9%BE%8D%E6%96%8C%E5%B8%82%E9%95%B7.jpg","林洲民":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/8\/8e\/01.27_%E7%B8%BD%E7%B5%B1%E8%A6%96%E5%AF%9F%E3%80%8C%E8%87%BA%E5%8C%97%E5%B8%82%E5%81%A5%E5%BA%B7%E5%85%AC%E5%85%B1%E4%BD%8F%E5%AE%85%E3%80%8D_%2839908541841%29_%28cropped%29.jpg"}
+const photoUrls = {
+    '柯文哲': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/%E6%9F%AF%E6%96%87%E5%93%B2%E4%B8%BB%E5%B8%AD.jpg/500px-%E6%9F%AF%E6%96%87%E5%93%B2%E4%B8%BB%E5%B8%AD.jpg',
+    '陳佩琪': 'https://upload.wikimedia.org/wikipedia/commons/6/62/%E9%99%B3%E4%BD%A9%E7%90%AA.jpg',
+    '苗博雅': 'https://upload.wikimedia.org/wikipedia/commons/1/1a/%E7%A4%BE%E6%9C%83%E6%B0%91%E4%B8%BB%E9%BB%A8%E5%8F%B0%E5%8C%97%E5%B8%82%E8%AD%B0%E5%93%A1%E8%8B%97%E5%8D%9A%E9%9B%85.png',
+};
+
 // Load the data from the provided JSON
 $.getJSON('./data/cpcity.json', function (data) {
     const dataset = data.result;
     const candidates = Object.keys(dataset);  // Candidate names
-    console.log(candidates);
+    // console.log(candidates);
     // change 
     const dates = Object.keys(dataset[candidates[0]]); // Get the date range
 
@@ -72,7 +79,7 @@ $.getJSON('./data/cpcity.json', function (data) {
         grid: {
             top: 30,
             bottom: 50,
-            left: 200,
+            left: 150,
             right: 80
         },
         xAxis: {
@@ -86,13 +93,27 @@ $.getJSON('./data/cpcity.json', function (data) {
         yAxis: {
             type: 'category',
             inverse: true,
-            max: 10,  // Show top 10 candidates
+            max: 10,
             axisLabel: {
                 show: true,
-                fontSize: 40,
+                fontSize: 25,
+                color: '#000',
                 formatter: function (index) {
-                    // Use the actual candidate name from the data for the y-axis label
-                    return dataForCurrentDate[index] ? dataForCurrentDate[index].name : ''; // Show candidate names even if data is 0
+                    // return rich text tag for the image and candidate name
+                    return `{img|} ${dataForCurrentDate[index].name}`;
+                },
+                rich: {
+                    img: {
+                        height: 50,  // Set the height of the image
+                        align: 'center',  // Align image with the text
+                        backgroundColor: {
+                            image: function (index) {
+                                // return the correct image URL from photoUrls object
+                                const candidateName = dataForCurrentDate[index].name;
+                                return photoUrls[candidateName] || '';  // Ensure it falls back to an empty string if no image is found
+                            }
+                        }
+                    }
                 }
             },
             animationDuration: 300,
@@ -102,7 +123,8 @@ $.getJSON('./data/cpcity.json', function (data) {
             {
                 realtimeSort: true,
                 type: 'bar',
-                data: getDataForDate(currentDate), // Initialize with the correct data
+                barWidth: 52, 
+                data: getDataForDate(currentDate),
                 itemStyle: {
                     color: function (param) {
                         return candidateColors[param.name] || '#888'; // Assign color based on candidate name
@@ -111,7 +133,17 @@ $.getJSON('./data/cpcity.json', function (data) {
                 label: {
                     show: true,
                     position: 'right',
-                    valueAnimation: true
+                    fontSize: 32,
+                    // move the candidate name to the left
+                    offset: [-110, 2],
+                    // font weight
+                    fontWeight: 'bold',
+                    // font rounded corner
+                    borderRadius: 5,
+                    valueAnimation: true,
+                    formatter: function (param) {
+                        return `${param.name}`;  // Display the image using the 'img' style and the candidate name with value
+                    }
                 }
             }
         ],
@@ -127,7 +159,7 @@ $.getJSON('./data/cpcity.json', function (data) {
                     bottom: 60,
                     style: {
                         text: currentDate,
-                        font: 'bolder 80px monospace',
+                        font: 'bolder 60px monospace',
                         fill: 'rgba(100, 100, 100, 0.75)'
                     },
                     z: 100
@@ -135,12 +167,12 @@ $.getJSON('./data/cpcity.json', function (data) {
                 {
                     type: 'text',
                     right: 160, 
-                    bottom: 150,
+                    bottom: 130,
                     style: {
-                        text: '京華城案 Youtube 人物每日聲量排行榜',
-                        font: '40px sans-serif',
+                        text: '柯文哲政治獻金＆京華城案\n    Youtube 人物聲量排行榜',
+                        font: '30px sans-serif',
                         fill: 'rgba(100, 100, 100, 1)',
-                        lineHeight: 20
+                        lineHeight: 30
                     },
                     z: 100
                 }
@@ -148,7 +180,6 @@ $.getJSON('./data/cpcity.json', function (data) {
         }
     };
     
-
     myChart.setOption(option);
 
     // Function to update the chart for a new date
@@ -158,11 +189,11 @@ $.getJSON('./data/cpcity.json', function (data) {
             currentDate = dates[startIndex];
             // Get data for the current date, include all candidates even with zero values
             dataForCurrentDate = getDataForDate(currentDate);
-    
             // Update the series data and graphic element for the new date
             option.series[0].data = dataForCurrentDate;
+
             // Update the date text but change the format form YYYY-MM-DD to MM/DD
-            option.graphic.elements[0].style.text = currentDate.slice(5).replace('-', '/');
+            option.graphic.elements[0].style.text = currentDate.slice(5);
             // Apply the updated options
             myChart.setOption(option);
         }
